@@ -1,10 +1,11 @@
 ﻿using Microsoft.Data.SqlClient;
+using System.Data;
 
 // (Note: Anything in parentheses is me writing out-of-code-review comments - it's not something I'd normally leave in the review.)
 
 namespace UserManagement.Services
 {
-    public class UserService
+    public class UserServiceCodeReview
     {
         // Suggestion:
         // Move this to config file, preferably Azure Key Vault if available, and then wrap it in a Depdenency Injected model.
@@ -39,7 +40,7 @@ WHERE Id = @UserId";
                 // In this case, `userId` will always be an integer, so it would be safe to interpolate as it was. 
                 // However, it is good practice to always parameterize dynamic queries to avoid SQL-injection and
                 // not generate false positives in a code security scan
-                command.Parameters.Add(new SqlParameter("@UserId", SqlDbType.Integer) { Value = userId });
+                command.Parameters.Add(new SqlParameter("@UserId", SqlDbType.Int) { Value = userId });
 
                 using var reader = command.ExecuteReader();
 
@@ -122,7 +123,7 @@ VALUES
             using var command = new SqlCommand(insertQuery, connection);
             command.Parameters.Add(new SqlParameter("@Username", SqlDbType.VarChar, 64) { Value = username });
             command.Parameters.Add(new SqlParameter("@Email", SqlDbType.NVarChar, 255) { Value = email });
-            command.Parameters.Add(new SqlParameter("@PasswordHash", SqlDbType.VarChar, 256) { Value = Password });
+            command.Parameters.Add(new SqlParameter("@PasswordHash", SqlDbType.VarChar, 256) { Value = password });
             command.ExecuteReader();
 
             using var reader = command.ExecuteReader();
@@ -144,7 +145,7 @@ VALUES
         }
     }
 
-    public class User
+    public class UserCodeReview
     {
         public int Id { get; set; }
         public string Username { get; set; }

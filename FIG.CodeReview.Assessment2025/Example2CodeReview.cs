@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 // I believe this was done for the sake of testing LINQ knowledge, but in case it's not, I'd suggest adding the filtering
 // in all of these methods into the data layer itself instead of always getting every single result every single time.
@@ -8,11 +9,11 @@ namespace ProductCatalog.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class ProductController : ControllerBase
+    public class ProductControllerCodeReview : ControllerBase
     {
-        private readonly IProductService _productService;
+        private readonly IProductServiceCodeReview _productService;
 
-        public ProductController(IProductService productService)
+        public ProductControllerCodeReview(IProductServiceCodeReview productService)
         {
             _productService = productService;
         }
@@ -66,7 +67,7 @@ namespace ProductCatalog.Controllers
         //     return BadRequest(ModelState);
         // }
         [HttpPost]
-        public async Task<IActionResult> CreateProduct([FromBody] ProductCreateRequest request)
+        public async Task<IActionResult> CreateProduct([FromBody] ProductCreateRequestCodeReview request)
         {
             // Check for null body just in case a malformed requested was made
             if (request == null)
@@ -95,7 +96,7 @@ namespace ProductCatalog.Controllers
                 return BadRequest("Product category is required");
             }
 
-            var product = new Product
+            var product = new ProductCodeReview
             {
                 Name = request.Name,
                 Description = request.Description,
@@ -177,7 +178,8 @@ namespace ProductCatalog.Controllers
         }
     }
 
-    public class ProductCreateRequest
+    // (NOTE: Just renaming this so VS doesn't throw errors - I wouldn't normally do this in a PR)
+    public class ProductCreateRequestCodeReview
     {
         public string Name { get; set; }
         public string Description { get; set; }
@@ -186,7 +188,7 @@ namespace ProductCatalog.Controllers
         public bool InStock { get; set; }
     }
 
-    public class Product
+    public class ProductCodeReview
     {
         public int Id { get; set; }
         public string Name { get; set; }
@@ -197,9 +199,9 @@ namespace ProductCatalog.Controllers
         public DateTime CreatedDate { get; set; }
     }
 
-    public interface IProductService
+    public interface IProductServiceCodeReview
     {
-        Task<List<Product>> GetAllProductsAsync();
-        Task<Product> CreateProductAsync(Product product);
+        Task<List<ProductCodeReview>> GetAllProductsAsync();
+        Task<ProductCodeReview> CreateProductAsync(ProductCodeReview product);
     }
 }
