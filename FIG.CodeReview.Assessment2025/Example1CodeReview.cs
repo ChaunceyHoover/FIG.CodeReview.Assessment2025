@@ -6,6 +6,7 @@ namespace UserManagement.Services
 {
     public class UserService
     {
+        // Suggestion:
         // Move this to config file, preferably Azure Key Vault if available, and then wrap it in a Depdenency Injected model.
         // See https://learn.microsoft.com/en-us/aspnet/core/fundamentals/configuration/?view=aspnetcore-9.0 for more info
         //
@@ -117,6 +118,7 @@ VALUES
             // (NOTE: This is assuming MSSQL - if using MySql, instead add a SELECT statement at the end and filter by LAST_INSERT_ID()
             //        or add `RETURNING Id` if PostgreSQL)
 
+            // To correct the possible SQL injection vector, parameterize query instead of using interpolated string
             using var command = new SqlCommand(insertQuery, connection);
             command.Parameters.Add(new SqlParameter("@Username", SqlDbType.VarChar, 64) { Value = username });
             command.Parameters.Add(new SqlParameter("@Email", SqlDbType.NVarChar, 255) { Value = email });
